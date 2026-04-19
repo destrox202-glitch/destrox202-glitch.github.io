@@ -319,7 +319,7 @@ footer{text-align:center;padding:14px 20px 0;position:relative;z-index:1;flex-sh
           <option value="MWL">Muslim World League</option>
           <option value="ISNA">ISNA (North America)</option>
           <option value="Egypt">Egyptian General Authority</option>
-          <option value="Makkah" selected>Umm Al-Qura, Makkah</option>
+          <option value="Makkah" selected>Umm Al-Qura, Makkah (Saudi Official)</option>
           <option value="Karachi">University of Karachi</option>
           <option value="Tehran">Geophysics Institute, Tehran</option>
           <option value="Jafari">Shia Ithna-Ansari</option>
@@ -716,7 +716,8 @@ function firePulse() {
 // ══════════════════════════════════════════════════════════════
 const METHOD_IDS = {
   'MWL': 3, 'ISNA': 2, 'Egypt': 5,
-  'Makkah': 4, 'Karachi': 1, 'Tehran': 7, 'Jafari': 0
+  'Makkah': 4, 'Karachi': 1, 'Tehran': 7, 'Jafari': 0,
+  'Gulf': 8, 'Kuwait': 9, 'Qatar': 10
 };
 
 function fmt12(t) {
@@ -745,7 +746,7 @@ async function fetchPrayerTimes(lat, lng, method) {
   const mm = now.getMonth() + 1;
   const yyyy = now.getFullYear();
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const url = `https://api.aladhan.com/v1/timings/${dd}-${mm}-${yyyy}?latitude=${lat}&longitude=${lng}&method=${m}&timezonestring=${encodeURIComponent(tz)}&tune=0,0,0,0,0,0,0,0,0`;
+  const url = `https://api.aladhan.com/v1/timings/${dd}-${mm}-${yyyy}?latitude=${lat}&longitude=${lng}&method=${m}&_=${Date.now()}`;
   const res  = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`API error ${res.status}`);
   const data = await res.json();
