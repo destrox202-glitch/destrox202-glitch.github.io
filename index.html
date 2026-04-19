@@ -448,15 +448,26 @@ window.startGPS = function() {
   showPrayerLoading();
 
   if (!navigator.geolocation) {
-    gpsError('Geolocation not supported.');
+  gpsError('Geolocation not supported.');
+  return;
+}
+
+// NEW: check permission first
+navigator.permissions.query({ name: 'geolocation' }).then(function(permission) {
+
+  if (permission.state === 'denied') {
+    gpsError('Location permission is denied. Please enable it in app settings.');
     return;
   }
 
+  // ORIGINAL CODE (unchanged)
   navigator.geolocation.getCurrentPosition(
     onPosition,
     onGPSError,
     { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
   );
+
+});
 };
 
 function onPosition(pos) {
