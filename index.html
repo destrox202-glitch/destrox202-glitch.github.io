@@ -428,6 +428,44 @@ let lastAligned = false;
 let hasCompass  = false;
 let userLat = null, userLng = null, watchId = null;
 let currentMethod = 'MWL';
+
+async function autoDetectMethod(lat, lng) {
+  try {
+    const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`);
+    const data = await res.json();
+    const country = data.countryCode;
+
+    const methodByCountry = {
+      'SA': 'Makkah', 'AE': 'Makkah', 'KW': 'Makkah',
+      'QA': 'Makkah', 'BH': 'Makkah', 'OM': 'Makkah',
+      'YE': 'Makkah', 'IQ': 'Makkah', 'JO': 'Makkah',
+      'SY': 'Makkah', 'LB': 'Makkah', 'PS': 'Makkah',
+      'EG': 'Egypt', 'LY': 'Egypt', 'SD': 'Egypt',
+      'TN': 'Egypt', 'DZ': 'Egypt', 'MA': 'Egypt',
+      'US': 'ISNA', 'CA': 'ISNA',
+      'GB': 'MWL', 'DE': 'MWL', 'FR': 'MWL',
+      'NL': 'MWL', 'BE': 'MWL', 'ES': 'MWL',
+      'IT': 'MWL', 'SE': 'MWL', 'NO': 'MWL',
+      'DK': 'MWL', 'CH': 'MWL', 'AT': 'MWL',
+      'PK': 'Karachi', 'IN': 'Karachi', 'BD': 'Karachi',
+      'AF': 'Karachi', 'NP': 'Karachi',
+      'IR': 'Tehran',
+      'MY': 'ISNA', 'ID': 'MWL', 'SG': 'ISNA',
+      'TH': 'MWL', 'PH': 'MWL',
+      'TR': 'MWL', 'KZ': 'MWL', 'UZ': 'MWL',
+    };
+
+    const detected = methodByCountry[country] || 'MWL';
+    currentMethod = detected;
+
+    const sel = document.getElementById('method-sel');
+    if (sel) sel.value = detected;
+
+    console.log(`Auto-detected: ${country} → ${detected}`);
+  } catch(e) {
+    console.log('Could not detect country, using default');
+  }
+}
 let prayerTimer   = null;
 
 // ══════════════════════════════════════════════════════════════
@@ -473,7 +511,8 @@ navigator.permissions.query({ name: 'geolocation' }).then(function(permission) {
 function onPosition(pos) {
   const { latitude: lat, longitude: lng, accuracy: acc } = pos.coords;
   userLat = lat; userLng = lng;
-
+  userLat = lat; userLng = lng;
+if (qibla === null) autoDetectMethod(lat, lng);
   qibla = calcQibla(lat, lng);
   document.getElementById('c-qibla').textContent = `${Math.round(qibla)}° ${card(qibla)}`;
   document.getElementById('c-dist').textContent  = fmtDist(calcDist(lat, lng));
