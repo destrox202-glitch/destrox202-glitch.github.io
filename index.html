@@ -508,12 +508,14 @@ navigator.permissions.query({ name: 'geolocation' }).then(function(permission) {
 });
 };
 
-function onPosition(pos) {
+async function onPosition(pos) {
   const { latitude: lat, longitude: lng, accuracy: acc } = pos.coords;
   userLat = lat; userLng = lng;
   userLat = lat; userLng = lng;
-if (qibla === null) autoDetectMethod(lat, lng);
-  qibla = calcQibla(lat, lng);
+if (qibla === null) {
+  await autoDetectMethod(lat, lng);
+}
+qibla = calcQibla(lat, lng);
   document.getElementById('c-qibla').textContent = `${Math.round(qibla)}° ${card(qibla)}`;
   document.getElementById('c-dist').textContent  = fmtDist(calcDist(lat, lng));
   document.getElementById('c-acc').textContent   = `±${Math.round(acc)} m`;
