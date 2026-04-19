@@ -757,7 +757,7 @@ async function fetchPrayerTimes(lat, lng, method) {
   const mm = now.getMonth() + 1;
   const yyyy = now.getFullYear();
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const url = `https://api.aladhan.com/v1/timings/${dd}-${mm}-${yyyy}?latitude=${lat}&longitude=${lng}&method=${m}&_=${Date.now()}`;
+  const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=2&school=1&tune=0,0,0,0,1,0,0,0,0`;
   const res  = await fetch(url, { cache: 'no-store' });
   if (!res.ok) throw new Error(`API error ${res.status}`);
   const data = await res.json();
