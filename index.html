@@ -798,7 +798,7 @@ function toDecimalH(t) {
 async function fetchPrayerTimes(lat, lng, method) {
   const m = METHOD_IDS[method] || 2; // FIXED fallback
 
-  const school = (method === 'Karachi') ? 0 : 1; 
+  const school = (method === 'Karachi') ? 1 : 0; 
   // Hanafi for South Asia, Shafi for others
 
   const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=${m}&school=${school}`;
